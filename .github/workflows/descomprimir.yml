@@ -1,0 +1,106 @@
+
+name: Descomprimir proyecto Sonora Music
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  descomprimir:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Descargar repositorio
+        uses: actions/checkout@v4
+
+      - name: Preparar herramientas
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y unzip
+
+      - name: Extraer proyecto Android
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          ZIP_FILE="$(find . -maxdepth 1 -type f \
+            -iname '*.zip' | head -n 1)"
+
+          if [ -z "$ZIP_FILE" ]; then
+            echo "ERROR: No hay ningún ZIP en la raíz."
+            exit 1
+          fi
+
+          TEMP_DIR="$(mktemp -d)"
+          trap 'rm -rf "$TEMP_DIR"' EXIT
+
+          echo "ZIP encontrado: $ZIP_FILE"
+
+          unzip -q "$ZIP_FILE" -d "$TEMP_DIR"
+
+          PROJECT_DIR=""
+
+          while IFS= read -r -d '' settings; do
+            candidate="$(dirname "$settings")"
+
+            if [ -f "$candidate/app/build.gradle" ] || \
+               [ -f "$candidate/app/build.gradle.kts" ]; then
+              PROJECT_DIR="$candidate"
+              break
+            fi
+          done < <(
+            find "$TEMP_DIR" \
+              -type f \
+              \( -name settings.gradle \
+              -o -name settings.gradle.kts \) \
+              -print0
+          )
+
+          if [ -z "$PROJECT_DIR" ]; then
+            echo "ERROR: No se encontró el proyecto Android."
+            echo "Debe contener settings.gradle y app/build.gradle."
+            exit 1
+          fi
+
+          echo "Proyecto localizado: $PROJECT_DIR"
+
+          mkdir -p .github/workflows
+
+          cp .github/workflows/descomprimir.yml \
+            "$RUNNER_TEMP/descomprimir.yml"
+
+          cp -a "$PROJECT_DIR"/. .
+
+          cp "$RUNNER_TEMP/descomprimir.yml" \
+            .github/workflows/descomprimir.yml
+
+          echo "Comprobando archivos esenciales..."
+
+          test -f settings.gradle \
+            || test -f settings.gradle.kts
+
+          test -f app/build.gradle \
+            || test -f app/build.gradle.kts
+
+          echo "Proyecto extraído correctamente."
+          ls -la
+
+          rm -f "$ZIP_FILE"
+
+      - name: Guardar archivos en GitHub
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email \
+            "41898282+github-actions[bot]@users.noreply.github.com"
+
+          git add -A
+
+          if git diff --cached --quiet; then
+            echo "No hay cambios para guardar."
+          else
+            git commit -m "Extraer proyecto Android Sonora Music"
+            git push
+          fi
+          
