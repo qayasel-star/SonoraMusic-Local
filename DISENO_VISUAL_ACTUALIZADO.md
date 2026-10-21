@@ -1,9 +1,13 @@
-# Sonora Music — diseño visual actualizado
+# Sonora Music 1.5.3 — Rediseño visual
 
-- Identidad nocturna en azul medianoche, cian eléctrico y violeta.
-- Portada principal gráfica con una S plateada, halo neón y barras de audio.
-- Jerarquía de inicio mejorada y accesos a música local, radio y catálogo.
-- Controles del reproductor con acento degradado cian-violeta.
-- Icono adaptativo de la app con S plateada y ondas de sonido.
+Esta versión ajusta la pantalla principal de Sonora al concepto visual de referencia: fondo azul noche, identidad SONORA centrada con acentos cian/violeta, banner de descubrimiento, accesos rápidos en tarjetas, sección de canciones recientes y navegación inferior persistente.
 
-El código de reproducción y las funciones existentes se conservaron. Esta versión aún debe compilarse en GitHub Actions para validar el resultado en Android.
+## Criterios de implementación
+- Mantiene el identificador Android `com.sonora.music` para permitir actualizaciones de la misma aplicación.
+- Mantiene la biblioteca local, favoritos, listas persistentes, reproducción y servicio multimedia existentes.
+- Incorpora una vista de Favoritos accesible desde el acceso rápido y la navegación inferior.
+- Mantiene radio y exploración como secciones separadas; Sonora continúa siendo principalmente un reproductor de archivos locales.
+- Incrementa `versionCode` a 9 y `versionName` a `1.5.3`.
+
+## Compilación
+Sube el contenido del proyecto a GitHub y ejecuta el flujo `Compilar Sonora Music APK`. El resultado esperado se publica como artefacto `SonoraMusic-debug`. Esta entrega no se debe considerar compilada hasta que el flujo termine correctamente.

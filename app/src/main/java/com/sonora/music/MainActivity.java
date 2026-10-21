@@ -56,75 +56,78 @@ public class MainActivity extends Activity {
     LinearLayout.LayoutParams lp(int w,int h,int top,int bottom){LinearLayout.LayoutParams p=new LinearLayout.LayoutParams(w,h);p.setMargins(0,top,0,bottom);return p;}
     Button btn(String s,int c,int tc){Button b=new Button(this);b.setText(s);b.setTextColor(tc);b.setTextSize(14);b.setAllCaps(false);b.setTypeface(null,Typeface.BOLD);b.setBackground(shape(c,18));return b;}
     void showApp(){
-        ScrollView scroll=new ScrollView(this);scroll.setFillViewport(true);scroll.setClipToPadding(false);
-        root=new LinearLayout(this);root.setOrientation(1);root.setPadding(18,16,18,24);
-        root.setBackground(new GradientDrawable(GradientDrawable.Orientation.TL_BR,new int[]{0xff050b1c,0xff101332,0xff090d20}));scroll.addView(root);setContentView(scroll);
-        LinearLayout brandRow=new LinearLayout(this);brandRow.setGravity(Gravity.CENTER_VERTICAL);root.addView(brandRow,lp(-1,-2,0,8));
-        LinearLayout brandText=new LinearLayout(this);brandText.setOrientation(1);brandRow.addView(brandText,new LinearLayout.LayoutParams(0,-2,1));
-        brandText.addView(txt("SONORA",24,Color.WHITE,true));
-        brandText.addView(txt("TU MÚSICA, EN TODAS PARTES",10,0xff9ba8d1,true),lp(-1,-2,2,0));
-        TextView statusIcon=txt("S",25,0xffe7f1ff,true); statusIcon.setShadowLayer(8,0,0,0xff00d9ff);statusIcon.setGravity(Gravity.CENTER);statusIcon.setBackground(shape(0xff151e3e,18));brandRow.addView(statusIcon,new LinearLayout.LayoutParams(46,46));
-        LinearLayout hero=new LinearLayout(this);hero.setOrientation(1);hero.setPadding(20,20,20,20);
-        GradientDrawable heroBg=new GradientDrawable(GradientDrawable.Orientation.TL_BR,new int[]{0xff35126f,0xff142a65,0xff073c54});heroBg.setCornerRadius(26);heroBg.setStroke(1,0xff286ce0);hero.setBackground(heroBg);root.addView(hero,lp(-1,-2,12,18));
-        hero.addView(txt("TU ESPACIO MUSICAL",11,mint,true));
-        TextView headline=txt("La música que\nva contigo.",30,Color.WHITE,true);headline.setPadding(0,8,0,5);hero.addView(headline);
-        hero.addView(txt("Tus canciones, tus listas y tus emisoras en un solo lugar.",13,0xffd1d9f6,false));
-        LinearLayout heroActions=new LinearLayout(this);heroActions.setGravity(Gravity.CENTER_VERTICAL);hero.addView(heroActions,lp(-1,-2,15,0));
-        Button localBtn=btn("♫  Mi música",0xff6a35ee,Color.WHITE);heroActions.addView(localBtn,new LinearLayout.LayoutParams(0,44,1));localBtn.setOnClickListener(v->{page="library";renderPage();});
-        Space gap=new Space(this);heroActions.addView(gap,new LinearLayout.LayoutParams(10,1));
-        Button listBtn=btn("☷  Mis listas",0xff12294b,Color.WHITE);listBtn.setBackground(strokeShape(0xff12294b,16,0xff168be7,1));heroActions.addView(listBtn,new LinearLayout.LayoutParams(0,44,1));listBtn.setOnClickListener(v->{page="playlists";renderPage();});
-        HorizontalScrollView navScroll=new HorizontalScrollView(this);navScroll.setHorizontalScrollBarEnabled(false);navScroll.setFillViewport(false);root.addView(navScroll,lp(-1,48,0,16));
-        tabs=new LinearLayout(this);tabs.setOrientation(0);tabs.setGravity(Gravity.CENTER_VERTICAL);tabs.setPadding(2,2,2,2);navScroll.addView(tabs);
-        navButtons.clear();navKeys.clear();
-        addTab("⌂  Inicio","home");addTab("♫  Local","library");addTab("☷  Listas","playlists");addTab("◉  Radio","radio");addTab("⌕  Explorar","catalog");
-        content=new LinearLayout(this);content.setOrientation(1);root.addView(content);
-        playerPanel=new LinearLayout(this);playerPanel.setOrientation(1);playerPanel.setPadding(15,14,15,13);playerPanel.setBackground(strokeShape(0xff0d1732,22,0xff2151a0,1));root.addView(playerPanel,lp(-1,-2,20,0));
+        root=new LinearLayout(this);root.setOrientation(1);root.setPadding(14,8,14,8);
+        root.setBackground(new GradientDrawable(GradientDrawable.Orientation.TL_BR,new int[]{0xff030817,0xff0a0d26,0xff050a19}));
+        setContentView(root);
+        ScrollView scroll=new ScrollView(this);scroll.setFillViewport(false);scroll.setClipToPadding(false);scroll.setVerticalScrollBarEnabled(false);
+        root.addView(scroll,new LinearLayout.LayoutParams(-1,0,1));
+        content=new LinearLayout(this);content.setOrientation(1);content.setPadding(2,4,2,12);scroll.addView(content);
+        // Persistent compact player, visually separated from the main page.
+        playerPanel=new LinearLayout(this);playerPanel.setOrientation(1);playerPanel.setPadding(12,10,12,8);playerPanel.setBackground(strokeShape(0xff0b142d,20,0xff164d83,1));root.addView(playerPanel,lp(-1,-2,5,5));
         LinearLayout playingRow=new LinearLayout(this);playingRow.setGravity(Gravity.CENTER_VERTICAL);playerPanel.addView(playingRow);
-        FrameLayout miniCover=new FrameLayout(this);miniCover.setBackground(shape(0xff30206a,13));playingRow.addView(miniCover,new LinearLayout.LayoutParams(46,46));TextView coverGlyph=txt("♫",23,mint,true);coverGlyph.setGravity(Gravity.CENTER);miniCover.addView(coverGlyph,new FrameLayout.LayoutParams(-1,-1));
+        FrameLayout miniCover=new FrameLayout(this);miniCover.setBackground(new GradientDrawable(GradientDrawable.Orientation.TL_BR,new int[]{0xff6326bc,0xff087b91}));playingRow.addView(miniCover,new LinearLayout.LayoutParams(42,42));
+        TextView coverGlyph=txt("♫",22,0xff7df7f0,true);coverGlyph.setGravity(Gravity.CENTER);miniCover.addView(coverGlyph,new FrameLayout.LayoutParams(-1,-1));
         LinearLayout playingWords=new LinearLayout(this);playingWords.setOrientation(1);playingWords.setPadding(10,0,4,0);playingRow.addView(playingWords,new LinearLayout.LayoutParams(0,-2,1));
-        playingWords.addView(txt("REPRODUCIENDO AHORA",9,mint,true));
-        nowTitle=txt("Elige una canción",14,Color.WHITE,true);nowTitle.setMaxLines(1);nowTitle.setEllipsize(android.text.TextUtils.TruncateAt.END);playingWords.addView(nowTitle,lp(-1,-2,2,0));
+        playingWords.addView(txt("REPRODUCIENDO AHORA",9,0xff66e9ed,true));
+        nowTitle=txt("Elige una canción",13,Color.WHITE,true);nowTitle.setMaxLines(1);nowTitle.setEllipsize(android.text.TextUtils.TruncateAt.END);playingWords.addView(nowTitle,lp(-1,-2,2,0));
         nowSub=txt("SONORA PLAYER",10,muted,false);nowSub.setMaxLines(1);nowSub.setEllipsize(android.text.TextUtils.TruncateAt.END);playingWords.addView(nowSub);
-        playButton=txt("▶",23,Color.WHITE,true);playButton.setGravity(Gravity.CENTER);playButton.setBackground(new GradientDrawable(GradientDrawable.Orientation.TL_BR,new int[]{0xff20dce4,0xff5d43f4}));playingRow.addView(playButton,new LinearLayout.LayoutParams(46,46));playButton.setOnClickListener(v->toggle());
-        LinearLayout controls=new LinearLayout(this);controls.setGravity(Gravity.CENTER);playerPanel.addView(controls,lp(-1,38,7,0));
-        TextView prev=txt("⏮",18,0xffb9c8ef,true);prev.setGravity(Gravity.CENTER);controls.addView(prev,new LinearLayout.LayoutParams(54,38));prev.setOnClickListener(v->serviceAction(MediaPlaybackService.ACTION_PREV));
-        TextView next=txt("⏭",18,0xffb9c8ef,true);next.setGravity(Gravity.CENTER);controls.addView(next,new LinearLayout.LayoutParams(54,38));next.setOnClickListener(v->serviceAction(MediaPlaybackService.ACTION_NEXT));
-        Button queueButton=btn("Ver cola de reproducción  ›",0xff111e3b,Color.WHITE);queueButton.setTextSize(11);controls.addView(queueButton,new LinearLayout.LayoutParams(0,34,1));queueButton.setOnClickListener(v->showQueueDialog());
+        playButton=txt("▶",22,Color.WHITE,true);playButton.setGravity(Gravity.CENTER);playButton.setBackground(new GradientDrawable(GradientDrawable.Orientation.TL_BR,new int[]{0xff18d9df,0xff6944ff}));playingRow.addView(playButton,new LinearLayout.LayoutParams(44,44));playButton.setOnClickListener(v->toggle());
+        LinearLayout controls=new LinearLayout(this);controls.setGravity(Gravity.CENTER_VERTICAL);playerPanel.addView(controls,lp(-1,30,4,0));
+        TextView prev=txt("⏮",17,0xffb9c8ef,true);prev.setGravity(Gravity.CENTER);controls.addView(prev,new LinearLayout.LayoutParams(48,30));prev.setOnClickListener(v->serviceAction(MediaPlaybackService.ACTION_PREV));
+        TextView next=txt("⏭",17,0xffb9c8ef,true);next.setGravity(Gravity.CENTER);controls.addView(next,new LinearLayout.LayoutParams(48,30));next.setOnClickListener(v->serviceAction(MediaPlaybackService.ACTION_NEXT));
+        TextView queue=txt("Cola de reproducción  ›",11,0xffb9c8ef,true);queue.setGravity(Gravity.RIGHT|Gravity.CENTER_VERTICAL);controls.addView(queue,new LinearLayout.LayoutParams(0,-1,1));queue.setOnClickListener(v->showQueueDialog());
+        // Bottom navigation inspired by the supplied reference.
+        tabs=new LinearLayout(this);tabs.setOrientation(0);tabs.setGravity(Gravity.CENTER);tabs.setPadding(0,5,0,0);root.addView(tabs,lp(-1,54,0,0));
+        navButtons.clear();navKeys.clear();
+        addTab("⌂\nInicio","home");addTab("⌕\nExplorar","catalog");addTab("▤\nBiblioteca","library");addTab("♡\nFavoritos","favorites");addTab("☷\nListas","playlists");
         renderPage();
     }
     GradientDrawable strokeShape(int color,int radius,int stroke,int width){GradientDrawable d=shape(color,radius);d.setStroke(width,stroke);return d;}
     void addTab(String label,String key){
-        Button b=btn(label,0xff0c1530,0xffb9c6e9);b.setTextSize(12);b.setPadding(14,0,14,0);b.setMinWidth(0);b.setMinimumWidth(0);b.setBackground(shape(0xff0c1530,16));
-        tabs.addView(b,new LinearLayout.LayoutParams(-2,-1));navButtons.add(b);navKeys.add(key);
+        Button b=btn(label,0xff070e21,0xff8f9bbf);b.setTextSize(10);b.setPadding(0,0,0,0);b.setMinWidth(0);b.setMinimumWidth(0);b.setLineSpacing(0,0);b.setBackground(shape(0xff070e21,13));
+        b.setGravity(Gravity.CENTER);tabs.addView(b,new LinearLayout.LayoutParams(0,-1,1));navButtons.add(b);navKeys.add(key);
         b.setOnClickListener(v->{page=key;activePlaylist=-1;renderPage();});
     }
     void updateNavigation(){
-        for(int i=0;i<navButtons.size();i++){String key=navKeys.get(i);boolean selected=page.equals(key)||(page.equals("playlistDetail")&&key.equals("playlists"));Button b=navButtons.get(i);b.setBackground(selected?strokeShape(0xff073d55,16,0xff00d9e8,1):shape(0xff0c1530,16));b.setTextColor(selected?mint:0xffb9c6e9);}
+        for(int i=0;i<navButtons.size();i++){String key=navKeys.get(i);boolean selected=page.equals(key)||(page.equals("playlistDetail")&&key.equals("playlists"));Button b=navButtons.get(i);b.setBackground(selected?strokeShape(0xff0c2940,13,0xff167eae,1):shape(0xff070e21,13));b.setTextColor(selected?mint:0xff929ec2);}
     }
     void renderPage(){
         updateNavigation();
         content.removeAllViews();
         if(page.equals("home")){
-            LinearLayout welcome = new LinearLayout(this);
-            welcome.setOrientation(1);
-            welcome.setPadding(2,2,2,4);
-            content.addView(welcome,lp(-1,-2,0,12));
-            welcome.addView(txt("TU BANDA SONORA",10,mint,true));
-            welcome.addView(txt("Escucha a tu manera",25,Color.WHITE,true),lp(-1,-2,4,2));
-            welcome.addView(txt("Todo lo que te gusta, en un solo lugar.",13,muted,false));
-            addFeaturedVisual();
-            TextView quickTitle=txt("DESCUBRE SONORA",10,0xff73dff4,true);
-            content.addView(quickTitle,lp(-1,-2,0,2));
-            addAction("♫","Tu música","Reproduce archivos guardados en el teléfono",()->pickLocal());
-            addAction("◉","Radio en vivo","Explora emisoras por género o país",()->{page="radio";renderPage();});
-            addAction("⌕","Catálogo musical","Busca música con licencia en Jamendo",()->{page="catalog";renderPage();});
-            content.addView(txt("Tus favoritos",17,Color.WHITE,true),lp(-1,-2,18,8));
-            boolean anyFav=false; for(int i=0;i<library.size();i++) if(library.get(i).favorite){addTrackRow(library.get(i),i,false);anyFav=true;}
-            if(!anyFav)content.addView(txt("Marca canciones con ☆ para tenerlas a mano.",12,muted,false),lp(-1,-2,2,8));
-            content.addView(txt("Añadido recientemente",17,Color.WHITE,true),lp(-1,-2,14,8));
-            if(library.isEmpty())content.addView(txt("Tu biblioteca está esperando su primera canción.",13,muted,false));
-            else for(int i=Math.max(0,library.size()-3);i<library.size();i++)addTrackRow(library.get(i),i,false);
-            addAction("⚙","Privacidad y ajustes","Gestiona tus datos guardados en este dispositivo",()->showSettings());
+            // Home rebuilt to match the supplied SONORA reference: centered identity,
+            // discovery banner, four compact shortcuts and recently played tracks.
+            LinearLayout identity=new LinearLayout(this); identity.setOrientation(1); identity.setGravity(Gravity.CENTER);
+            content.addView(identity,lp(-1,-2,4,18));
+            TextView wave=txt("◂ 〰 ◇ 〰 ▸",27,0xff14d9f5,true); wave.setGravity(Gravity.CENTER); wave.setShadowLayer(12,0,0,0xff6a42ff); identity.addView(wave,lp(-1,-2,0,2));
+            TextView logo=txt("S O N O R A",30,Color.WHITE,true); logo.setGravity(Gravity.CENTER); logo.setLetterSpacing(.08f); identity.addView(logo);
+            TextView tagline=txt("Tu música, en todas partes",14,0xffc8d2f4,true); tagline.setGravity(Gravity.CENTER); identity.addView(tagline,lp(-1,-2,4,0));
+            LinearLayout utility=new LinearLayout(this); utility.setGravity(Gravity.RIGHT|Gravity.CENTER_VERTICAL);
+            Button settings=btn("⚙",0xff101632,Color.WHITE); settings.setTextSize(20); settings.setBackground(strokeShape(0xff101632,18,0xff263f80,1)); utility.addView(settings,new LinearLayout.LayoutParams(48,42)); settings.setOnClickListener(v->showSettings());
+            content.addView(utility,lp(-1,-2,0,8));
+            LinearLayout hero=new LinearLayout(this); hero.setOrientation(1); hero.setPadding(18,20,18,18);
+            GradientDrawable heroBg=new GradientDrawable(GradientDrawable.Orientation.TL_BR,new int[]{0xff6418dc,0xff3118a0,0xff071e43,0xff071b2d}); heroBg.setCornerRadius(25); heroBg.setStroke(1,0xff2778e8); hero.setBackground(heroBg); content.addView(hero,lp(-1,-2,0,16));
+            hero.addView(txt("DESCUBRE",10,0xff69f4ee,true));
+            hero.addView(txt("Descubre\nnueva música",26,Color.WHITE,true),lp(-1,-2,6,6));
+            hero.addView(txt("Explora, escucha y disfruta de tus canciones favoritas.",13,0xffe0e4ff,false),lp(-1,-2,0,12));
+            Button explore=btn("Explorar ahora   ›",0xff4334ed,Color.WHITE); explore.setBackground(new GradientDrawable(GradientDrawable.Orientation.LEFT_RIGHT,new int[]{0xff5632f5,0xff087fc8})); hero.addView(explore,new LinearLayout.LayoutParams(-1,46)); explore.setOnClickListener(v->{page="catalog";renderPage();});
+            LinearLayout shortcuts=new LinearLayout(this); shortcuts.setGravity(Gravity.CENTER); content.addView(shortcuts,lp(-1,94,0,20));
+            addHomeShortcut(shortcuts,"♫","Música\nlocal",0xff0c2345,0xff22e7ed,()->{page="library";renderPage();});
+            addHomeShortcut(shortcuts,"▣","Radio en\nvivo",0xff21194b,0xffdc70ff,()->{page="radio";renderPage();});
+            addHomeShortcut(shortcuts,"♥","Favoritos",0xff301344,0xffff65d9,()->{page="favorites";renderPage();});
+            addHomeShortcut(shortcuts,"☷","Listas",0xff102a5c,0xff25d9f2,()->{page="playlists";renderPage();});
+            LinearLayout recentHeader=new LinearLayout(this); recentHeader.setGravity(Gravity.CENTER_VERTICAL); content.addView(recentHeader,lp(-1,-2,0,8));
+            recentHeader.addView(txt("Escuchado recientemente",18,Color.WHITE,true),new LinearLayout.LayoutParams(0,-2,1));
+            TextView seeAll=txt("Ver todo  ›",12,0xff21e1df,true); recentHeader.addView(seeAll); seeAll.setOnClickListener(v->{page="library";renderPage();});
+            if(library.isEmpty()){
+                LinearLayout empty=new LinearLayout(this); empty.setOrientation(1); empty.setGravity(Gravity.CENTER); empty.setPadding(18,22,18,22); empty.setBackground(strokeShape(0xff0b1630,18,0xff183c70,1)); content.addView(empty,lp(-1,-2,0,12));
+                empty.addView(txt("♫",32,0xff24e4ed,true)); empty.addView(txt("Tu música aparecerá aquí",15,Color.WHITE,true),lp(-1,-2,5,3)); empty.addView(txt("Importa canciones para empezar a escuchar.",12,muted,false));
+                Button importBtn=btn("＋  Importar música",0xff4630df,Color.WHITE); empty.addView(importBtn,lp(-1,44,12,0)); importBtn.setOnClickListener(v->pickLocal());
+            } else { for(int i=Math.max(0,library.size()-3);i<library.size();i++)addTrackRow(library.get(i),i,false); }
+        } else if(page.equals("favorites")){
+            content.addView(txt("Favoritos",25,Color.WHITE,true),lp(-1,-2,0,12));
+            boolean any=false; for(int i=0;i<library.size();i++)if(library.get(i).favorite){addTrackRow(library.get(i),i,false);any=true;}
+            if(!any)content.addView(txt("Todavía no tienes favoritos. Marca una canción con ☆ para guardarla aquí.",13,muted,false),lp(-1,-2,0,8));
         } else if(page.equals("library")){
             content.addView(txt("Música local",25,Color.WHITE,true));
             content.addView(txt("Tu colección guardada en este dispositivo.",13,muted,false),lp(-1,-2,4,14));
@@ -143,6 +146,14 @@ public class MainActivity extends Activity {
         else if(page.equals("radio")) renderRadio();
         else if(page.equals("settings")) showSettingsContent();
         else renderCatalog();
+    }
+    void addHomeShortcut(LinearLayout parent,String icon,String label,int tileColor,int iconColor,Runnable action){
+        LinearLayout tile=new LinearLayout(this); tile.setOrientation(1); tile.setGravity(Gravity.CENTER); tile.setPadding(3,8,3,6);
+        tile.setBackground(strokeShape(tileColor,18,0xff263f80,1));
+        LinearLayout.LayoutParams params=new LinearLayout.LayoutParams(0,-1,1); params.setMargins(3,0,3,0); parent.addView(tile,params);
+        TextView symbol=txt(icon,25,iconColor,true); symbol.setGravity(Gravity.CENTER); tile.addView(symbol,lp(-1,-2,0,4));
+        TextView title=txt(label,10,Color.WHITE,true); title.setGravity(Gravity.CENTER); tile.addView(title);
+        tile.setOnClickListener(v->action.run());
     }
     void addFeaturedVisual(){
         LinearLayout feature = new LinearLayout(this);
